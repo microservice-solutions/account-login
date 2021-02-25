@@ -76,6 +76,21 @@ public class LoginController {
 		return ResponseEntity.ok("User already loged in.");
 	}
 	
+	@PostMapping("/revoke")
+	public ResponseEntity<String> revoke(@RequestParam String username) {
+		log.info("Received revoke request for user {}", username);
+		
+		TokenModel repoModel = getRepositoryModel(username);
+		
+		if ( repoModel!=null ) {
+			tokenRepository.delete(repoModel);
+			
+			return ResponseEntity.ok("User access token revoked");
+		}
+		
+		return ResponseEntity.ok("User does not have valid token");
+	}
+	
 	private TokenModel getRepositoryModel(String email) {
 		
 		TokenModel token = new TokenModel();
