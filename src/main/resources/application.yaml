@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: account-login
+  datasource:
+    url: jdbc:h2:mem:login
+    username: sa
+    password: password
+    
+logging:  level:    root: INFO
+
+server:
+  port: 9080
