@@ -27,7 +27,7 @@ public class Order {
 		TokenModel token = getRepositoryModel(email);
 		
 		if ( token!=null ) {
-			String authHeader = token.getTokenType() + " " + token.getAccessToken();
+			String authHeader = token.getTokenType() + " " + token.getIdToken();
 			
 			ResponseEntity<String> response = null;
 			
@@ -49,7 +49,7 @@ public class Order {
 		
 		ExampleMatcher ignoringExampleMatcher = ExampleMatcher.matchingAny()
 			      .withMatcher("EMAIL_ID", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
-			      .withIgnorePaths("ACCESS_TOKEN", "TOKEN_TYPE", "EXPIRES_IN");
+			      .withIgnorePaths("ACCESS_TOKEN", "ID_TOKEN", "TOKEN_TYPE", "EXPIRES_IN");
 		
 		TokenModel result = null;
 		

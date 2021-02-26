@@ -23,6 +23,9 @@ public class TokenModel {
 	@Column(name = "ACCESS_TOKEN", length = 2000)
 	private String accessToken;
 	
+	@Column(name = "ID_TOKEN", length = 2000)
+	private String idToken;
+	
 	@Column(name = "TOKEN_TYPE")
 	private String tokenType;
 	

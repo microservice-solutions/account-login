@@ -59,12 +59,14 @@ public class LoginController {
 			}
 			
 			String accessToken = response.getBody().findValue("access_token").asText();
+			String idToken = response.getBody().findValue("id_token").asText();
 			String tokenType = response.getBody().findValue("token_type").asText();
 			Long expiresIn = response.getBody().findValue("expires_in").asLong();
 			
 			TokenModel token = new TokenModel();
 			token.setEmailId(username);
 			token.setAccessToken(accessToken);
+			token.setIdToken(idToken);
 			token.setTokenType(tokenType);
 			token.setExpiresIn(expiresIn);
 			
@@ -98,7 +100,7 @@ public class LoginController {
 		
 		ExampleMatcher ignoringExampleMatcher = ExampleMatcher.matchingAny()
 			      .withMatcher("EMAIL_ID", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
-			      .withIgnorePaths("ACCESS_TOKEN", "TOKEN_TYPE", "EXPIRES_IN");
+			      .withIgnorePaths("ACCESS_TOKEN", "ID_TOKEN", "TOKEN_TYPE", "EXPIRES_IN");
 		
 		TokenModel result = null;
 		
