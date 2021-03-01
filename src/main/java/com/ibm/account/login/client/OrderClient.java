@@ -12,5 +12,6 @@ public interface OrderClient {
 	ResponseEntity<String> placeOrder(
 			@RequestHeader(name = "Authorization") String bearerToken,
 			@RequestParam(name = "productCode") String productCode,
-			@RequestParam(name = "quantity") int quantity);
+			@RequestParam(name = "quantity") int quantity,
+			@RequestParam(name = "transactionId") String transactionId);
 }

@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import lombok.Data;
 
 @Entity
@@ -22,6 +20,9 @@ public class TokenModel {
 	
 	@Column(name = "ACCESS_TOKEN", length = 2000)
 	private String accessToken;
+	
+	@Column(name = "SESSIONID", length = 500)
+	private String sessionId;
 	
 	@Column(name = "ID_TOKEN", length = 2000)
 	private String idToken;

@@ -12,7 +12,7 @@ public class PlaceOrderService {
 	@Autowired
 	OrderClient client;
 	
-	public ResponseEntity<String> placeOrder(String bearerToken, String productCode, int quantity) {
-		return client.placeOrder(bearerToken, productCode, quantity);
+	public ResponseEntity<String> placeOrder(String bearerToken, String productCode, int quantity, String transactionId) {
+		return client.placeOrder(bearerToken, productCode, quantity, transactionId);
 	}
 }

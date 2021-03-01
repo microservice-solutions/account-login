@@ -3,6 +3,10 @@ package com.ibm.account.login.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.UUID;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +15,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,22 +26,21 @@ import com.ibm.account.login.model.UserCredentials;
 import com.ibm.account.login.repository.TokenRepository;
 import com.ibm.account.login.service.LoginService;
 
-
 @RestController
 public class LoginController {
 	
 	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 	
-	@Autowired TokenRepository tokenRepository;
+	@Autowired TokenRepository 		tokenRepository;
+	@Autowired LoginService 		service;
 	
-	@Autowired
-	LoginService service;
-	
-	private static final String clientId = "22417cd1-c698-4054-838d-c44fdf2e12ac";
-	private static final String clientSecret = "MTE1Y2VlYmMtNTI2YS00MmQ4LWJlZTktYzIwZWNmMjg0NTRl";
+	private static final String 	CLIENT_ID 				= "22417cd1-c698-4054-838d-c44fdf2e12ac";
+	private static final String 	CLIENT_SECRET 			= "MTE1Y2VlYmMtNTI2YS00MmQ4LWJlZTktYzIwZWNmMjg0NTRl";
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) throws UnsupportedEncodingException {
+	public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password, 
+			@CookieValue(value = "SESSIONID", required = false) String requestSessionId,
+			HttpServletResponse httpResponse) throws UnsupportedEncodingException {
 		
 		log.info("Received login request for user {}", username);
 		
@@ -47,8 +51,9 @@ public class LoginController {
 			user.setGrant_type("password");
 			user.setUsername(username);
 			user.setPassword(password);
-					
-			String authHeader = "Basic " + Base64.getEncoder().encodeToString((clientId+":"+clientSecret).getBytes("utf-8"));
+			
+			String authHeader = "Basic " + Base64.getEncoder().encodeToString((CLIENT_ID+":"+CLIENT_SECRET).getBytes("utf-8"));
+			UUID sessionId = UUID.randomUUID();
 			
 			ResponseEntity<JsonNode> response = null;
 			
@@ -63,19 +68,34 @@ public class LoginController {
 			String tokenType = response.getBody().findValue("token_type").asText();
 			Long expiresIn = response.getBody().findValue("expires_in").asLong();
 			
+			Cookie cookie = new Cookie("SESSIONID", sessionId.toString());
+			cookie.setPath("/");
+			cookie.setHttpOnly(true);
+			httpResponse.addCookie(cookie);
+			
+			
 			TokenModel token = new TokenModel();
 			token.setEmailId(username);
 			token.setAccessToken(accessToken);
 			token.setIdToken(idToken);
+			token.setSessionId(sessionId.toString());
 			token.setTokenType(tokenType);
 			token.setExpiresIn(expiresIn);
 			
 			tokenRepository.save(token);
 			
-			return ResponseEntity.ok("User login successful");
+			return ResponseEntity
+					.status(HttpStatus.OK)
+					.body("User login successful");
+		} else if ( repoModel!=null && repoModel.getSessionId().equals(requestSessionId) ) {
+			return ResponseEntity
+					.status(HttpStatus.OK)
+					.body("User already logged in");
 		}
 		
-		return ResponseEntity.ok("User already loged in.");
+		return ResponseEntity
+				.status(HttpStatus.UNAUTHORIZED)
+				.body("User not authorized");
 	}
 	
 	@PostMapping("/revoke")
@@ -87,20 +107,21 @@ public class LoginController {
 		if ( repoModel!=null ) {
 			tokenRepository.delete(repoModel);
 			
-			return ResponseEntity.ok("User access token revoked");
+			return ResponseEntity.ok("User access revoked");
 		}
 		
-		return ResponseEntity.ok("User does not have valid token");
+		return ResponseEntity.ok("User does not have valid authorization");
 	}
 	
 	private TokenModel getRepositoryModel(String email) {
 		
 		TokenModel token = new TokenModel();
 		token.setEmailId(email);
+			
 		
 		ExampleMatcher ignoringExampleMatcher = ExampleMatcher.matchingAny()
 			      .withMatcher("EMAIL_ID", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
-			      .withIgnorePaths("ACCESS_TOKEN", "ID_TOKEN", "TOKEN_TYPE", "EXPIRES_IN");
+			      .withIgnorePaths("ACCESS_TOKEN", "TRANSACTION_TOKEN", "SESSIONID", "ID_TOKEN", "TOKEN_TYPE", "EXPIRES_IN");
 		
 		TokenModel result = null;
 		
