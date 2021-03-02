@@ -1,0 +1,240 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Microservice Case Study: Identity Service",
+		"_postman_id": "978e1cd6-97b1-87cb-970f-817413d4b189",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Token - grant_type password",
+			"request": {
+				"url": "https://us-south.appid.cloud.ibm.com/oauth/v4/83f91118-37d1-4c0d-b0b8-4a530d1174bb/token",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic MjI0MTdjZDEtYzY5OC00MDU0LTgzOGQtYzQ0ZmRmMmUxMmFjOk1URTFZMlZsWW1NdE5USTJZUzAwTW1RNExXSmxaVGt0WXpJd1pXTm1NamcwTlRSbA==",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "charles.brown@example.com",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Token - grant_type client_credentials",
+			"request": {
+				"url": "https://us-south.appid.cloud.ibm.com/oauth/v4/83f91118-37d1-4c0d-b0b8-4a530d1174bb/token",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic MjI0MTdjZDEtYzY5OC00MDU0LTgzOGQtYzQ0ZmRmMmUxMmFjOk1URTFZMlZsWW1NdE5USTJZUzAwTW1RNExXSmxaVGt0WXpJd1pXTm1NamcwTlRSbA==",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Receive Order Service",
+			"request": {
+				"url": {
+					"raw": "http://localhost:9085/order?productCode=PC001&quantity=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9085",
+					"path": [
+						"order"
+					],
+					"query": [
+						{
+							"key": "productCode",
+							"value": "PC001",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "quantity",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFwcElkLTgzZjkxMTE4LTM3ZDEtNGMwZC1iMGI4LTRhNTMwZDExNzRiYi0yMDIxLTAyLTE3VDEzOjA1OjQ1LjcwNyIsInZlciI6NH0.eyJpc3MiOiJodHRwczovL3VzLXNvdXRoLmFwcGlkLmNsb3VkLmlibS5jb20vb2F1dGgvdjQvODNmOTExMTgtMzdkMS00YzBkLWIwYjgtNGE1MzBkMTE3NGJiIiwiZXhwIjoxNjE0MDkyNzk5LCJhdWQiOlsiMjI0MTdjZDEtYzY5OC00MDU0LTgzOGQtYzQ0ZmRmMmUxMmFjIl0sInN1YiI6ImNlMGRhZmZhLTVhYzItNDRlNi1hMDRlLWI1NjE3Njg1MjFhYiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhbXIiOlsiY2xvdWRfZGlyZWN0b3J5Il0sImlhdCI6MTYxNDA4OTE5OSwidGVuYW50IjoiODNmOTExMTgtMzdkMS00YzBkLWIwYjgtNGE1MzBkMTE3NGJiIiwic2NvcGUiOiJvcGVuaWQgYXBwaWRfZGVmYXVsdCBhcHBpZF9yZWFkdXNlcmF0dHIgYXBwaWRfcmVhZHByb2ZpbGUgYXBwaWRfd3JpdGV1c2VyYXR0ciBhcHBpZF9hdXRoZW50aWNhdGVkIn0.ZFL4rysasFbDIwgrYpHxokT17_UPy8gBtQGpCdvCQDGnViwoa2x9vDCMOp5N9uLkeHYeDo39MfWDq1LX--ZHIwP1XbQ0aSLuXM3OgM6-GUN2NyoOQQ-6qVGBjGxx2CRlcxTRL_mxHod3I9Z3eZE4dT7L5IzZQmkjVpLBYhiCqxZn7dBkhb9fBm4v8mpn2adkRCgxxPwMpJSg34bLVUlN7APjZjEh-xtbleIEgYHQWQrF06bDJ3F05VyA-LhdyskZsTtYVgnlvmNl3xYFrOFYRog0abIQtw-VfY2rN-d3xb4vAD3RRm3A6jfZZrsImDv1zVSKJfC34DMtj_x72HzBvQ",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Account Login",
+			"request": {
+				"url": {
+					"raw": "http://localhost:9080/login/?username=charles.brown@example.com&password=password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"login",
+						""
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "charles.brown@example.com",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Receive Order",
+			"request": {
+				"url": {
+					"raw": "http://localhost:9080/order/?username=charles.brown@example.com&productCode=PC001&quantity=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"order",
+						""
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "charles.brown@example.com",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "productCode",
+							"value": "PC001",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "quantity",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Revoke Access",
+			"request": {
+				"url": {
+					"raw": "http://localhost:9080/revoke/?username=charles.brown@example.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"revoke",
+						""
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "charles.brown@example.com",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
