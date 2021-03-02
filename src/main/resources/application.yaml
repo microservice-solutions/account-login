@@ -10,3 +10,8 @@ logging:  level:    root: INFO
 
 server:
   port: 9080
+
+app:
+  client:
+    id: 22417cd1-c698-4054-838d-c44fdf2e12ac
+    secret: MTE1Y2VlYmMtNTI2YS00MmQ4LWJlZTktYzIwZWNmMjg0NTRl

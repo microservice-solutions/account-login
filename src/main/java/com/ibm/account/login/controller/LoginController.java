@@ -11,10 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +28,7 @@ import com.ibm.account.login.model.UserCredentials;
 import com.ibm.account.login.repository.TokenRepository;
 import com.ibm.account.login.service.LoginService;
 
+@Component
 @RestController
 public class LoginController {
 	
@@ -34,8 +37,11 @@ public class LoginController {
 	@Autowired TokenRepository 		tokenRepository;
 	@Autowired LoginService 		service;
 	
-	private static final String 	CLIENT_ID 				= "22417cd1-c698-4054-838d-c44fdf2e12ac";
-	private static final String 	CLIENT_SECRET 			= "MTE1Y2VlYmMtNTI2YS00MmQ4LWJlZTktYzIwZWNmMjg0NTRl";
+	@Value("${app.client.id}")
+	private String			CLIENT_ID;
+	
+	@Value("${app.client.secret}")
+	private String 			CLIENT_SECRET;
 	
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password, 
