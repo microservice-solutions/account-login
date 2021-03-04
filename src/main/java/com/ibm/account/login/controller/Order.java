@@ -1,5 +1,6 @@
 package com.ibm.account.login.controller;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,9 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ibm.account.login.model.OrderRequest;
 import com.ibm.account.login.model.TokenModel;
 import com.ibm.account.login.repository.TokenRepository;
 import com.ibm.account.login.service.PlaceOrderService;
@@ -23,10 +26,10 @@ public class Order {
 	@Autowired PlaceOrderService service;
 	@Autowired TokenRepository tokenRepository;
 	
-	@PostMapping("/order")
+	@PostMapping(path = "/order", consumes = "application/json")
 	public ResponseEntity<String> order(
 			@CookieValue(value = "SESSIONID", required = false) String requestSessionId,
-			@RequestParam String username, @RequestParam String productCode, @RequestParam int quantity) {
+			@RequestParam String username, @RequestBody List<OrderRequest> orderRequestList) {
 		TokenModel token = getRepositoryModel(username);
 		
 		if ( token!=null && requestSessionId!=null && !requestSessionId.isEmpty() && token.getSessionId().equals(requestSessionId) ) {
@@ -36,7 +39,7 @@ public class Order {
 			
 			try {
 				String transactionId = UUID.randomUUID().toString();
-				response = service.placeOrder(authHeader, productCode, quantity, transactionId);
+				response = service.placeOrder(authHeader, orderRequestList, transactionId);
 				
 				return response;
 			} catch(Exception e) {
